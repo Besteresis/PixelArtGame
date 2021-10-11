@@ -1,4 +1,4 @@
-/// @description My first ghost
+ /// @description My first ghost
 
 // Variables
 walkSpeed = 4;
@@ -9,3 +9,6 @@ moveRight = 0;
 moveLeft = 0;
 moveUp= 0;
 moveDown = 0;
+nearbyNPC = noone;
+lookRange = 60;
+npcPrompt = noone;

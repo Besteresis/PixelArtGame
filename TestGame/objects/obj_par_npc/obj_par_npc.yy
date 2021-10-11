@@ -23,11 +23,11 @@
   "properties": [],
   "overriddenProperties": [],
   "parent": {
-    "name": "TownBackground",
-    "path": "folders/Sprites/TownBackground.yy",
+    "name": "NPC",
+    "path": "folders/Objects/NPC.yy",
   },
   "resourceVersion": "1.0",
-  "name": "obj_par_environment",
+  "name": "obj_par_npc",
   "tags": [],
   "resourceType": "GMObject",
 }

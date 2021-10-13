@@ -1,31 +1,48 @@
  /// @description Textbox test
 
-var _text;
-
-//Get all dialogue file names to load
-var _file
-var _newFile
-if (directory_exists("dialogue")) {
-	_file[0] = file_find_first("dialogue/*.txt", fa_readonly);
-	i = 1;
-	while(1) {
-		show_debug_message(_file);
-		_newFile = file_find_next();
-		if (_newFile == "") {
-			_file[i] = _newFile;
-			i += 1;
-		} else {
-			break;
-		}
-	}
-}
-show_debug_message(_file);
-
+var _text
+var _startingDialogueIndex
 // Create a textbox if NPC is nearby
-if (nearbyNPC && global.playerControl) {
-	_text = nearbyNPC.myText;
-	if (!instance_exists(obj_textbox)) {
-		iii = instance_create_depth(x, y, -10000, obj_textbox);	
-		iii.textToShow = _text;
+if (nearbyNPC) {
+	if (global.playerControl) {
+		currentDialogueText = 0;
+		currentDialogueLine = 0;
+		currentDialogueLength = 0;
+		if (nearbyNPC.dialogueProgression == 0) {
+			_startingDialogueIndex = 0;	
+		} else {
+			_startingDialogueIndex = nearbyNPC.dialogueRules[nearbyNPC.dialogueProgression] + 1;
+		}
+		if (nearbyNPC.dialogueProgression == array_length(nearbyNPC.dialogueRules) - 1) {
+			currentDialogueLength = array_length(nearbyNPC.dialogueText) - _startingDialogueIndex;
+		} else if (nearbyNPC.dialogueProgression == 0) {
+			if (array_length(nearbyNPC.dialogueRules) == 1) {
+				currentDialogueLength = array_length(nearbyNPC.dialogueText);
+			} else {
+				currentDialogueLength = nearbyNPC.dialogueRules[0] + 1;
+			}
+		} else {
+			currentDialogueLength = nearbyNPC.dialogueRules[nearbyNPC.dialogueProgression + 1] - _startingDialogueIndex;
+		}
+		//array_copy(currentDialogueText, 0, nearbyNPC.dialogueText, _startingDialogueIndex, currentDialogueLength);
+		for (i = _startingDialogueIndex; i < _startingDialogueIndex + currentDialogueLength; i++) {
+			currentDialogueText[i - _startingDialogueIndex] = nearbyNPC.dialogueText[i];
+		}
+		///////////////////////////////////////////////////////////////////
+		if (!instance_exists(obj_textbox)) {
+			_text = currentDialogueText[currentDialogueLine];
+			currentDialogueLine++;
+			currentDialogueBox = instance_create_depth(x, y, -10000, obj_textbox);	
+			currentDialogueBox.textToShow = _text;
+		}
+	} else {
+		if (currentDialogueLine < currentDialogueLength) {
+			_text = nearbyNPC.dialogueText[nearbyNPC.dialogueRules[nearbyNPC.dialogueProgression + currentDialogueLine]];
+			currentDialogueLine++;	
+			currentDialogueBox.textToShow = _text;
+		} else {
+			nearbyNPC.dialogueProgression++;
+			nearbyNPC.alarm[1] = 1; 
+		}
 	}
 }

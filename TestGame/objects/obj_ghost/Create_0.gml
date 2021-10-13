@@ -12,3 +12,7 @@ moveDown = 0;
 nearbyNPC = noone;
 lookRange = 60;
 npcPrompt = noone;
+currentDialogueBox = noone;
+currentDialogueText = 0;
+currentDialogueLine = 0;
+currentDialogueLength = 0;

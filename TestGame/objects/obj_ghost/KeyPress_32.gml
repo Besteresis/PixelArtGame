@@ -5,13 +5,14 @@ var _startingDialogueIndex
 // Create a textbox if NPC is nearby
 if (nearbyNPC) {
 	if (global.playerControl) {
+		currentDialogueBox = noone;
 		currentDialogueText = 0;
 		currentDialogueLine = 0;
 		currentDialogueLength = 0;
 		if (nearbyNPC.dialogueProgression == 0) {
 			_startingDialogueIndex = 0;	
 		} else {
-			_startingDialogueIndex = nearbyNPC.dialogueRules[nearbyNPC.dialogueProgression] + 1;
+			_startingDialogueIndex = nearbyNPC.dialogueRules[nearbyNPC.dialogueProgression - 1] + 1;
 		}
 		if (nearbyNPC.dialogueProgression == array_length(nearbyNPC.dialogueRules) - 1) {
 			currentDialogueLength = array_length(nearbyNPC.dialogueText) - _startingDialogueIndex;
@@ -37,12 +38,14 @@ if (nearbyNPC) {
 		}
 	} else {
 		if (currentDialogueLine < currentDialogueLength) {
-			_text = nearbyNPC.dialogueText[nearbyNPC.dialogueRules[nearbyNPC.dialogueProgression + currentDialogueLine]];
+			_text = currentDialogueText[currentDialogueLine];
 			currentDialogueLine++;	
 			currentDialogueBox.textToShow = _text;
 		} else {
-			nearbyNPC.dialogueProgression++;
-			nearbyNPC.alarm[1] = 1; 
+			if (nearbyNPC.dialogueProgression != array_length(nearbyNPC.dialogueRules) - 1) {
+				nearbyNPC.dialogueProgression++;
+			}
+			currentDialogueBox.alarm[1] = 1; 
 		}
 	}
 }
